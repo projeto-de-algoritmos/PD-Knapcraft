@@ -1,5 +1,5 @@
 
 export type RankingLine = {
-    name: string
+    username: string
     score: number
 }
