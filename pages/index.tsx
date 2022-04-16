@@ -4,6 +4,8 @@ import Ranking from '../src/components/Ranking';
 import Widget from '../src/components/Widget';
 import { RankingLine } from '../src/models/Ranking';
 import { Theme } from '../src/models/Theme';
+import { API } from '../assets/consts'
+
 
 export default function Home({ rankingList }:RankingProps) {
   const [userName, setUsername] = useState<string>('');
@@ -30,7 +32,7 @@ export default function Home({ rankingList }:RankingProps) {
 }
 
 export async function getServerSideProps(context: any) {
-  const response = await fetch(process.env.API + '/ranking');
+  const response = await fetch(API + '/ranking');
   const rankingList = await response.json();
 
   return {
