@@ -1,15 +1,46 @@
-import { Container } from 'react-bootstrap';
-import Background from '../src/components/Background';
+import { useRouter } from 'next/router';
+import { FormEvent, useState } from 'react';
+import Ranking from '../src/components/Ranking';
+import Widget from '../src/components/Widget';
+import { RankingLine } from '../src/models/Ranking';
+import { Theme } from '../src/models/Theme';
 
-export default function Home(props: any) {
+export default function Home({ rankingList }:RankingProps) {
+  const [userName, setUsername] = useState<string>('');
+  const router = useRouter();
+
+  function handleSubmit(e: FormEvent) {
+    e.preventDefault();
+    router.push(`/game?username=${userName}`)
+  }
+
   return (
-    <>
-      <Background backgroundUri={props.theme?.background}/>
-      <Container className='d-flex align-items-center justify-content-center vh-100'>
-        <Container className='w-10 justify-content-center d-flex'>
-          ola mundo
-        </Container>
-      </Container>
-    </>
+    <Widget>
+      <div className='title text-center'>Programação Dinamica: Minecraft</div>
+
+      <form className='d-flex justify-content-around flex-column mb-5 mt-5' onSubmit={handleSubmit}>
+        <input className='input-text' placeholder='Insira seu nome' onChange={e => setUsername(e.target.value)} value={userName}/>
+
+        <button className='button-java-w m-10 disabled' type='submit' disabled={userName.trim().length === 0}>Jogar</button>
+      </form>
+
+      <Ranking rankingList={rankingList}/>
+    </Widget>
   )
+}
+
+export async function getServerSideProps(context: any) {
+  const response = await fetch(process.env.API + '/ranking');
+  const rankingList = await response.json();
+
+  return {
+      props: {
+          rankingList,
+      }
+  }
+}
+
+type RankingProps = {
+  rankingList: RankingLine[];
+  theme?: Theme
 }
