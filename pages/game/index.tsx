@@ -1,23 +1,54 @@
-import type { NextPage } from "next";
 import "bootstrap/dist/css/bootstrap.min.css";
+import type { NextPage } from "next";
 import ItemSlot from "../../src/components/ItemSlot";
 import Widget from "../../src/components/Widget";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Item } from "../../src/models/Item";
+import { getBestValue } from "../../src/services/CraftService";
+import { generateItems } from "../../src/utils/generateItems";
 
 const Game: NextPage = () => {
-  const refs: any = [];
-  let num: number = 0;
   const [slotList, setSlotList] = useState<Array<Item>>([]);
+  let level: number = 1;
+  const items: Item[] = generateItems(level++);
+  const bestResult: Item = getBestValue(items, 5 + level * 2);
 
-  function clickItem(id: String, index2: number) {
-    if (id.includes("crafting")) {
+  useEffect(() => {
+    slotList[4] = {
+      id: "EnchantedBook",
+      imagem: "https://minecraftitemids.com/item/32/enchanted_book.png",
+      peso: 0,
+      quantidade: 0,
+      valor: 0,
+    };
+    for (let index = 0; index < items.length; index++) {
+      slotList[index + 9] = {
+        id: items[index].id,
+        imagem: items[index].imagem,
+        peso: items[index].peso,
+        quantidade: items[index].quantidade,
+        valor: items[index].valor,
+      };
+    }
+  }, []);
+
+  function clickItem(slotId: String, itemIndex: number) {
+    if (
+      slotList[itemIndex] === undefined ||
+      slotList[itemIndex].id == "" ||
+      itemIndex == 4
+    )
+      return;
+    if (slotId.includes("crafting")) {
       for (let index = 0; index < 36; index++) {
-        if (slotList[index] === undefined || slotList[index].id == "") {
-          slotList[index + 8] = slotList[index2];
-          slotList[index2] = {
+        if (
+          slotList[index + 9] === undefined ||
+          slotList[index + 9].id === ""
+        ) {
+          slotList[index + 9] = slotList[itemIndex];
+          slotList[itemIndex] = {
             id: "",
-            image: "",
+            imagem: "",
             peso: 0,
             quantidade: 0,
             valor: 0,
@@ -28,10 +59,10 @@ const Game: NextPage = () => {
     } else {
       for (let index = 0; index < 9; index++) {
         if (slotList[index] === undefined || slotList[index].id == "") {
-          slotList[index] = slotList[index2];
-          slotList[index2] = {
+          slotList[index] = slotList[itemIndex];
+          slotList[itemIndex] = {
             id: "",
-            image: "",
+            imagem: "",
             peso: 0,
             quantidade: 0,
             valor: 0,
@@ -40,8 +71,8 @@ const Game: NextPage = () => {
         }
       }
     }
-    const newSlotList: Array<Item> = [...slotList];
-    setSlotList(newSlotList);
+
+    setSlotList([...slotList]);
   }
 
   return (
@@ -59,15 +90,14 @@ const Game: NextPage = () => {
                 .map((value, index: number) => (
                   <ItemSlot
                     id={"crafting" + index}
-                    reference={(componentRef: any) =>
-                      (refs[num++] = componentRef)
-                    }
                     onClick={() => clickItem("crafting" + index, index)}
                     item={slotList[index]}
                   />
                 ))}
             </div>
-            <div className="slot"></div>
+            <div className="slot">
+              <ItemSlot />
+            </div>
           </div>
         </div>
         <h1>Inventory</h1>
@@ -77,7 +107,6 @@ const Game: NextPage = () => {
             .map((value, index: number) => (
               <ItemSlot
                 id={"inventory" + index}
-                reference={(componentRef: any) => (refs[num++] = componentRef)}
                 item={slotList[index + 9]}
                 onClick={() => clickItem("inventory" + index, index + 9)}
               />
@@ -89,7 +118,6 @@ const Game: NextPage = () => {
             .map((value, index: number) => (
               <ItemSlot
                 id={"main" + index}
-                reference={(componentRef: any) => (refs[num++] = componentRef)}
                 item={slotList[index + 36]}
                 onClick={() => clickItem("main" + index, index + 36)}
               />
