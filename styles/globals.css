@@ -50,7 +50,7 @@ a {
 }
 
 .inventory {
-  width: 380px;
+  width: 398px;
   height: 425px;
   background: #c6c6c6;
   border-radius: 3px;
@@ -69,7 +69,7 @@ h1 {
 
 .number {
   font-family: "VT323", monospace;
-  font-size: 24px;
+  font-size: 20px;
   color: #fefefe;
   position: relative;
   text-shadow: #333 1px 2px 1px;
@@ -79,13 +79,17 @@ h1 {
 }
 
 .slot {
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
   display: flex;
   justify-content: center;
   background: #8b8b8b;
   box-shadow: inset 1.5px 1.5px 0px rgba(55, 55, 55, 0.8),
     inset -2px -2px 0px #ffffff;
+}
+
+.slot :hover {
+  cursor: pointer;
 }
 
 .slotSpace {
@@ -103,8 +107,25 @@ h1 {
   height: 32px;
 }
 
+.item-info {
+  display: none;
+}
+
+.slot:hover + .item-info {
+  display: block;
+  position: fixed;
+  width: 100vw;
+  bottom: 0;
+  color: #bcb6c0;
+  background-color: #100211;
+  z-index: 1;
+  padding: 5px;
+  border-radius: 5px;
+  border-color: #200544;
+}
+
 .item img {
-  width: 28px;
+  height: 24px;
 }
 
 .rowSize {

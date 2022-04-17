@@ -3,5 +3,5 @@ export type Item = {
   peso: number;
   valor: number;
   quantidade: number;
-  image: String;
+  imagem: String;
 };
