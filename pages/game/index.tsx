@@ -18,6 +18,7 @@ const defaultItem: Item = {
 
 const Game: NextPage = () => {
   const router = useRouter();
+  const [score, setScore] = useState<number>(0);
   const [slotList, setSlotList] = useState<Array<Item>>([]);
   const [level, setLevel] = useState({ numero: 1, peso: 7 });
   const [items, setItems] = useState<Item[]>(generateItems(level.numero));
@@ -95,11 +96,16 @@ const Game: NextPage = () => {
 
   function clickResult() {
     if (levelScore.peso <= level.peso && levelScore.pontuacao == bestResult.valor) {
+      setScore(score + levelScore.pontuacao);
       setLevelScore({ pontuacao: 0, peso: 0 });
       setLevel({ numero: level.numero + 1, peso: level.peso + 2 });
     }
     else {
-      console.log("Perdeu");
+      router.push({
+        pathname: '/gameOver', query: {
+          username: router.query.username, score: score
+        }
+      });
     }
   }
 
