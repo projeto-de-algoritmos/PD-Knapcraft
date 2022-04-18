@@ -15,7 +15,7 @@ const defaultItem: Item = {
   quantidade: 0,
   valor: 0,
 };
-
+//to-do peso meximo
 const Game: NextPage = () => {
   const router = useRouter();
   const [score, setScore] = useState<number>(0);
@@ -26,7 +26,7 @@ const Game: NextPage = () => {
   const [bestResult, setBestResult] = useState<Item>({
     id: "emerald",
     imagem: "https://minecraftitemids.com/item/64/emerald.png",
-    peso: 1,
+    peso: level.peso,
     quantidade: 0,
     valor: 0,
   });
@@ -60,6 +60,7 @@ const Game: NextPage = () => {
     setBestResult((values: any) => (
       {
         ...values,
+        peso: level.peso,
         quantidade: bestValue,
         valor: bestValue,
       }

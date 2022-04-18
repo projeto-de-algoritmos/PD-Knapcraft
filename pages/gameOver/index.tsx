@@ -16,7 +16,6 @@ const GameOver: NextPage = () => {
                 <button className="button-java" onClick={() => location.href = 'https://github.com/projeto-de-algoritmos/PD-dupla20'}>Repositório</button>
             </div>
         </div>
-
     );
 };
 

@@ -5,7 +5,7 @@ export default function ItemSlot(props: any) {
         <div className="item">
           <img
             src={
-              typeof props.item !== "undefined" && props.item.imagem !== ""
+              typeof props.item !== "undefined"
                 ? props.item.imagem
                 : ""
             }
@@ -17,11 +17,14 @@ export default function ItemSlot(props: any) {
           </div>
         </div>
       </div>
-      <div className="item-info">
-        {typeof props.item !== "undefined" && props.item.quantidade > 0
-          ? `Item: ${props.item.id} Peso: ${props.item.peso} Valor: ${props.item.valor}`
-          : ""}
-      </div>
+      {typeof props.item !== "undefined" && props.item.quantidade > 0
+        ?
+        <div className="item-info">
+          <div>{`Item: ${props.item.id}`}</div>
+          <div>{`Peso: ${props.item.peso}`}</div>
+          <div>{`Valor: ${props.item.valor}`}</div>
+        </div> : <></>
+      }
     </>
   );
 }
