@@ -6,14 +6,38 @@ import { useEffect, useState } from "react";
 import { Item } from "../../src/models/Item";
 import { getBestValue } from "../../src/services/CraftService";
 import { generateItems } from "../../src/utils/generateItems";
+import { useRouter } from "next/router";
+
+const defaultItem: Item = {
+  id: "",
+  imagem: "",
+  peso: 0,
+  quantidade: 0,
+  valor: 0,
+};
 
 const Game: NextPage = () => {
+  const router = useRouter();
   const [slotList, setSlotList] = useState<Array<Item>>([]);
-  let level: number = 1;
-  const items: Item[] = generateItems(level++);
-  const bestResult: Item = getBestValue(items, 5 + level * 2);
+  const [level, setLevel] = useState({ numero: 1, peso: 7 });
+  const [items, setItems] = useState<Item[]>(generateItems(level.numero));
+  const [levelScore, setLevelScore] = useState<any>({ pontuacao: 0, peso: 0 });
+  const [bestResult, setBestResult] = useState<Item>({
+    id: "emerald",
+    imagem: "https://minecraftitemids.com/item/64/emerald.png",
+    peso: 1,
+    quantidade: 0,
+    valor: 0,
+  });
 
   useEffect(() => {
+    const bestValue = getBestValue(items, level.peso);
+    setItems(generateItems(level.numero));
+
+    for (let index = 0; index < 9; index++)
+      slotList[index] = defaultItem;
+
+
     slotList[4] = {
       id: "EnchantedBook",
       imagem: "https://minecraftitemids.com/item/32/enchanted_book.png",
@@ -21,6 +45,7 @@ const Game: NextPage = () => {
       quantidade: 0,
       valor: 0,
     };
+
     for (let index = 0; index < items.length; index++) {
       slotList[index + 9] = {
         id: items[index].id,
@@ -30,49 +55,52 @@ const Game: NextPage = () => {
         valor: items[index].valor,
       };
     }
-  }, []);
+
+    setBestResult((values: any) => (
+      {
+        ...values,
+        quantidade: bestValue,
+        valor: bestValue,
+      }
+    ));
+
+  }, [level]);
 
   function clickItem(slotId: String, itemIndex: number) {
-    if (
-      slotList[itemIndex] === undefined ||
-      slotList[itemIndex].id == "" ||
-      itemIndex == 4
-    )
+    if (slotList[itemIndex] === undefined || slotList[itemIndex].id == "" || itemIndex == 4)
       return;
+
     if (slotId.includes("crafting")) {
-      for (let index = 0; index < 36; index++) {
-        if (
-          slotList[index + 9] === undefined ||
-          slotList[index + 9].id === ""
-        ) {
-          slotList[index + 9] = slotList[itemIndex];
-          slotList[itemIndex] = {
-            id: "",
-            imagem: "",
-            peso: 0,
-            quantidade: 0,
-            valor: 0,
-          };
+      for (let index = 9; index < 36; index++) {
+        if (slotList[index] === undefined || slotList[index].id === "") {
+          setLevelScore({ pontuacao: levelScore.pontuacao - slotList[itemIndex].valor, peso: levelScore.peso - slotList[itemIndex].peso });
+          slotList[index] = slotList[itemIndex];
+          slotList[itemIndex] = defaultItem;
           break;
         }
       }
     } else {
       for (let index = 0; index < 9; index++) {
         if (slotList[index] === undefined || slotList[index].id == "") {
+          setLevelScore({ pontuacao: levelScore.pontuacao + slotList[itemIndex].valor, peso: levelScore.peso + slotList[itemIndex].peso });
           slotList[index] = slotList[itemIndex];
-          slotList[itemIndex] = {
-            id: "",
-            imagem: "",
-            peso: 0,
-            quantidade: 0,
-            valor: 0,
-          };
+          slotList[itemIndex] = defaultItem;
           break;
         }
       }
     }
 
     setSlotList([...slotList]);
+  }
+
+  function clickResult() {
+    if (levelScore.peso <= level.peso && levelScore.pontuacao == bestResult.valor) {
+      setLevelScore({ pontuacao: 0, peso: 0 });
+      setLevel({ numero: level.numero + 1, peso: level.peso + 2 });
+    }
+    else {
+      console.log("Perdeu");
+    }
   }
 
   return (
@@ -82,7 +110,7 @@ const Game: NextPage = () => {
         <div className="slotSpace">
           <div className="d-flex align-items-center justify-content-around w-100">
             <div className="item">
-              <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAzUlEQVQ4y6WTsQ3CMBBF06RD0EAVGjZIRZc6ordSMwdDUCH3DEDnVTyP4Tv6x2EcHMDSVyzn3rtz4epwvVTMT6sEbldVYL4SEOrPfRhuQ/xOSnIgIKQ9trL/KElBFCPNvokSToK8SHbrWkBdpCWcRE8jEgi6U/cGaBn26VUw2aJ+SCigBMFPXZyCiHMuGGOeAhxoEYo0TNBaG2vxjYLNchR470WiO+uOGpYrYGGTSlKQMM/BiCAnYYqgXlrCrrPAnGQOOPmOCJU6/vWCmTu4+j2Qw1oKGgAAAABJRU5ErkJggg==" />
+              <img src="https://minecraftitemids.com/item/32/knowledge_book.png" />
             </div>
             <div className="rowSize">
               {Array(9)
@@ -96,7 +124,7 @@ const Game: NextPage = () => {
                 ))}
             </div>
             <div className="slot">
-              <ItemSlot />
+              <ItemSlot id="result" item={bestResult} onClick={() => clickResult()} />
             </div>
           </div>
         </div>

@@ -20,17 +20,17 @@ export function generateItems(level: number): Item[] {
     { nome: "netherite", valor: 5 },
   ];
   const forma: Forma[] = [
-    { nome: "ore", peso: 10, valor: 1 },
-    { nome: "block", peso: 10, valor: 9 },
-    { nome: "chestplate", peso: 6, valor: 8 },
-    { nome: "leggings", peso: 6, valor: 7 },
-    { nome: "boots", peso: 6, valor: 4 },
-    { nome: "helmet", peso: 6, valor: 5 },
-    { nome: "sword", peso: 5, valor: 3 },
+    { nome: "ore", peso: 20, valor: 1 },
+    { nome: "block", peso: 20, valor: 8 },
+    { nome: "chestplate", peso: 9, valor: 7 },
+    { nome: "leggings", peso: 8, valor: 6 },
+    { nome: "boots", peso: 8, valor: 3 },
+    { nome: "helmet", peso: 8, valor: 4 },
+    { nome: "sword", peso: 7, valor: 2 },
     { nome: "axe", peso: 5, valor: 2 },
-    { nome: "hoe", peso: 5, valor: 1 },
-    { nome: "shovel", peso: 6, valor: 1 },
-    { nome: "pickaxe", peso: 6, valor: 3 },
+    { nome: "hoe", peso: 5, valor: 2 },
+    { nome: "shovel", peso: 6, valor: 2 },
+    { nome: "pickaxe", peso: 7, valor: 2 },
   ];
 
   let selectedMaterial: Material = { nome: "", valor: 0 };
