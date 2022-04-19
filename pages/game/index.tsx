@@ -32,16 +32,7 @@ export default function Game() {
   const [score, setScore] = useState<number>(0);
   const [footerList, setFooterList] = useState<Item[]>([]);
   const [levelScore, setLevelScore] = useState<any>({ pontuacao: 0, peso: 0 });
-  // const [bestResult, setBestResult] = useState<Item>({
-  //   id: "result",
-  //   imagem: "https://minecraftitemids.com/item/64/emerald.png",
-  //   peso: level.peso,
-  //   quantidade: 0,
-  //   valor: 0,
-  // });
-  // console.log("=============================");
-  // console.log(bestResult);
-  // console.log(inventoryList);
+
   useEffect(() => {
     nextLevel(1, 20);
     for (let index = 0; index < 9; index++) {

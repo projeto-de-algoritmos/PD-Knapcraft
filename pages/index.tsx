@@ -30,14 +30,13 @@ export default function Home({ rankingList }: RankingProps) {
 
   return (
     <Widget>
-      <div className='title text-center text-light'>Programação Dinamica: Minecraft</div>
+      <div className='title text-center text-light'>Knapcraft</div>
 
-      <form className='d-flex justify-content-around flex-column mb-5 mt-5' onSubmit={handleSubmit}>
-        <input className='input-text' placeholder='Insira seu nome' onChange={e => setUsername(e.target.value)} value={username} />
+      <form className='d-flex justify-content-around flex-column mb-5 mt-5 w-50' onSubmit={handleSubmit}>
+        <input className='input-text mb-1' placeholder='Insira seu nome' onChange={e => setUsername(e.target.value)} value={username} />
 
         <button className='button-java-w m-10 disabled' type='submit' disabled={username.trim().length === 0}>Jogar</button>
       </form>
-
       <Ranking rankingList={rankingList} />
     </Widget>
   )

@@ -1,12 +1,13 @@
 import style from './style.module.css';
 import { RankingLine } from '../../models/Ranking';
 import { Table } from 'react-bootstrap';
+import { toTitle } from '../../utils/string';
 
 export default function Ranking({ rankingList }: RankingProps) {
     rankingList = rankingList.sort((a, b) => b.score - a.score);
 
     return (
-        <div className='header p-2'>
+        <div className='d-flex w-50 flex-column header p-2'>
             <h2 className='header'>Ranking</h2>
             <Table striped bordered hover>
                 <thead>
@@ -17,7 +18,7 @@ export default function Ranking({ rankingList }: RankingProps) {
                     </tr>
                 </thead>
                 <tbody>
-                    {rankingList.map((r, i) => <RankingLine index={i+1} rankingLine={r} key={`${i}_${r.username}`}/>)}
+                    {rankingList.map((r, i) => <RankingLine index={i + 1} rankingLine={r} key={`${i}_${r.username}`} />)}
                 </tbody>
             </Table>
 
@@ -29,7 +30,7 @@ function RankingLine({ index, rankingLine }: RankingLineProps) {
     return (
         <tr>
             <td>{index}</td>
-            <td>{rankingLine.username}</td>
+            <td>{toTitle(rankingLine.username)}</td>
             <td>{rankingLine.score}</td>
         </tr>
     )

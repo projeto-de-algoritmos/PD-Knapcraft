@@ -2,7 +2,6 @@ import { Item } from "../models/Item";
 
 export function getBestValue(items: Item[], weight: number): any {
     const m: number[][] = [new Array(weight + 1),];
-
     m[0].fill(0);
 
     for (let i = 1; i <= items.length; i++) {
