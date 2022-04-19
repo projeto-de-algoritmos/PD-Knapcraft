@@ -12,7 +12,7 @@
 
 ## Sobre
 
-O Knapcraft consiste na utilização do algoritmo de knapsack em programação dinâmica para gerar o melhor valor dado um conjunto de .
+O Knapcraft consiste na utilização do algoritmo de knapsack em programação dinâmica para gerar o melhor valor dado um conjunto de items.
 
 ## Apresentação
 
@@ -24,7 +24,7 @@ O Knapcraft consiste na utilização do algoritmo de knapsack em programação d
 
 <img src="assets/apresentacao/inicial.png" width="600"/>
 
-<img src="assets/apresentacao/telaJogo.png" width="600"/>
+<img src="assets/apresentacao/game.png" width="600"/>
 
 <img src="assets/apresentacao/endgame.png" width="600"/>
 <hr>
@@ -37,5 +37,13 @@ O Knapcraft consiste na utilização do algoritmo de knapsack em programação d
 ## Uso
 
 Para utilizar o projeto acesse: https://pd-knapcraft.vercel.app/ ou rode os comandos:
-npm install<br>
-npm run dev
+`npm install` <br>
+`npm run dev`
+
+Caso queira rodar localmente com um banco de dados PostgreSQL, crie o arquivo `.env` na raiz com os seguintes dados:
+
+PGUSER=<br>
+PGHOST=<br>
+PGPASSWORD=<br>
+PGDATABASE=<br>
+PGPORT=<br>

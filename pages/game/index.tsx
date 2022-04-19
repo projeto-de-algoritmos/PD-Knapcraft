@@ -9,8 +9,10 @@ import { useRouter } from "next/router";
 import arrow from "../../assets/images/arrow.png";
 import { API } from '../../assets/consts';
 import { Level } from '../../src/models/Level';
+import Background from '../../src/components/Background';
+import { Theme } from '../../src/models/Theme';
 
-export default function Game() {
+export default function Game({ theme }: GameProps) {
   const router = useRouter();
   const [level, setLevel] = useState<Level>({
     numero: 0, peso: 0, inventoryList: [], craftingList: [],
@@ -133,54 +135,78 @@ export default function Game() {
   }
 
   return (
-    <Widget>
-      <div className="inventory">
-        <h1>Crafting</h1>
-        <div className="slotSpace">
-          <div className="d-flex align-items-center justify-content-around w-100">
-            <div className="rowSize">
-              {Array(9)
-                .fill(1)
-                .map((value, index: number) => (
-                  <ItemSlot
-                    key={"crafting" + index}
-                    onClick={() => clickCraftItem(index)}
-                    item={level.craftingList[index]}
-                    showTooltip={true}
-                  />
-                ))}
-            </div>
-            <img src={arrow.src} />
-            <div className="slot">
-              <ItemSlot key={level.numero} item={level.bestResult} onClick={(e) => clickResult(e)} showTooltip={true} />
+    <>
+      <Background backgroundUri={theme.background} />
+      <Widget>
+        <div className="inventory">
+          <h1>Crafting</h1>
+          <div className="slotSpace">
+            <div className="d-flex align-items-center justify-content-around w-100">
+              <div className="rowSize">
+                {Array(9)
+                  .fill(1)
+                  .map((value, index: number) => (
+                    <ItemSlot
+                      key={"crafting" + index}
+                      onClick={() => clickCraftItem(index)}
+                      item={level.craftingList[index]}
+                      showTooltip={true}
+                    />
+                  ))}
+              </div>
+              <img src={arrow.src} />
+              <div className="slot">
+                <ItemSlot key={level.numero} item={level.bestResult} onClick={(e) => clickResult(e)} showTooltip={true} />
+              </div>
             </div>
           </div>
+          <h1>Inventory</h1>
+          <div className="slotSpace">
+            {Array(27)
+              .fill(1)
+              .map((value, index: number) => (
+                <ItemSlot
+                  key={"inventory" + index}
+                  item={level.inventoryList[index]}
+                  onClick={() => clickInventoryItem(index)}
+                  showTooltip={true}
+                />
+              ))}
+          </div>
+          <div className="slotSpace">
+            {Array(9)
+              .fill(1)
+              .map((value, index: number) => (
+                <ItemSlot
+                  key={'footer' + index}
+                  item={footerList[index]}
+                  showTooltip={false}
+                />
+              ))}
+          </div>
         </div>
-        <h1>Inventory</h1>
-        <div className="slotSpace">
-          {Array(27)
-            .fill(1)
-            .map((value, index: number) => (
-              <ItemSlot
-                key={"inventory" + index}
-                item={level.inventoryList[index]}
-                onClick={() => clickInventoryItem(index)}
-                showTooltip={true}
-              />
-            ))}
-        </div>
-        <div className="slotSpace">
-          {Array(9)
-            .fill(1)
-            .map((value, index: number) => (
-              <ItemSlot
-                key={'footer' + index}
-                item={footerList[index]}
-                showTooltip={false}
-              />
-            ))}
-        </div>
-      </div>
-    </Widget>
+      </Widget>
+    </>
   );
 };
+
+export async function getServerSideProps(context: any) {
+  let theme = {
+    background: 'https://wallpaperaccess.com/full/171177.jpg'
+  };
+
+  try {
+    const themeResponse = await fetch(API + '/theme');
+    theme = await themeResponse.json();
+  } catch (ex) { };
+
+  return {
+    props: {
+      theme
+    }
+  }
+}
+
+type GameProps = {
+  theme: Theme
+}

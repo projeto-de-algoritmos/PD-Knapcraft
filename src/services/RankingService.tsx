@@ -20,7 +20,7 @@ export function cleanUsername(username: string) {
 
 export async function selectAllRanking(): Promise<RankingLine[]> {
     const client = getClient();
-    const query = 'SELECT (username, score) FROM public.ranking;';
+    const query = 'SELECT * FROM public.ranking;';
 
     client.connect();
     const result = await client.query(query);

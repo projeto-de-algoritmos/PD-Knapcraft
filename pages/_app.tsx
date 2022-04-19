@@ -8,22 +8,13 @@ import Script from 'next/script';
 import { API } from '../assets/consts'
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const [theme, setTheme] = useState<Theme>();
-
-  useEffect(() => {
-    fetch(API + '/theme')
-    .then(r => r.ok && r.json())
-    .then(theme => setTheme(theme));
-  }, []);
-  
   return (
     <>
-        <link rel="stylesheet" href="https://unpkg.com/minecraft-framework-css@1.1.6/css/main.css"/>
-        <Script src="https://unpkg.com/minecraft-framework-css@1.1.6/css/assets/script.js" />
-        <Background backgroundUri={theme?.background}/>
-        <Component {...pageProps}/>
-      </>
-    )
-  }
+      <link rel="stylesheet" href="https://unpkg.com/minecraft-framework-css@1.1.6/css/main.css" />
+      <Script src="https://unpkg.com/minecraft-framework-css@1.1.6/css/assets/script.js" />
+      <Component {...pageProps} />
+    </>
+  )
+}
 
 export default MyApp
