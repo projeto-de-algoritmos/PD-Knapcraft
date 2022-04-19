@@ -20,7 +20,7 @@ export function cleanUsername(username: string) {
 
 export async function selectAllRanking(): Promise<RankingLine[]> {
     const client = getClient();
-    const query = 'SELECT * FROM public.ranking;';
+    const query = 'SELECT (username, score) FROM public.ranking;';
 
     client.connect();
     const result = await client.query(query);
@@ -30,7 +30,6 @@ export async function selectAllRanking(): Promise<RankingLine[]> {
 }
 
 export async function createRankingLine(rankingLine: RankingLine): Promise<RankingLine> {
-    7
     const client = getClient();
     const query = 'INSERT INTO public.ranking(username, score) VALUES($1, $2);';
     rankingLine.username = cleanUsername(rankingLine.username);

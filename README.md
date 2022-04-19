@@ -16,17 +16,17 @@ O Knapcraft consiste na utilização do algoritmo de knapsack em programação d
 
 ## Apresentação
 
-[Video da Apresentação](assets/videos/apresentacao.mp4)
+[Video da Apresentação](assets/apresentacao/apresentacao.mp4)
 
 <hr>
 
 ## Screenshots
 
-<img src="assets/images/telaInicial.png" width="600"/>
+<img src="assets/apresentacao/inicial.png" width="600"/>
 
-<img src="assets/images/telaJogo.png" width="600"/>
+<img src="assets/apresentacao/telaJogo.png" width="600"/>
 
-<img src="assets/images/telaPersonagem.png" width="600"/>
+<img src="assets/apresentacao/endgame.png" width="600"/>
 <hr>
 
 ## Instalação

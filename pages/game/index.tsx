@@ -8,14 +8,7 @@ import { generateItems } from "../../src/utils/generateItems";
 import { useRouter } from "next/router";
 import arrow from "../../assets/images/arrow.png";
 import { API } from '../../assets/consts';
-
-type Level = {
-  numero: number;
-  peso: number;
-  bestResult: Item;
-  inventoryList: Item[];
-  craftingList: Item[];
-}
+import { Level } from '../../src/models/Level';
 
 export default function Game() {
   const router = useRouter();
