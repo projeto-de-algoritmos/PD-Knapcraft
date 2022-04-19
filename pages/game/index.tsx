@@ -1,113 +1,151 @@
-import "bootstrap/dist/css/bootstrap.min.css";
 import type { NextPage } from "next";
 import ItemSlot from "../../src/components/ItemSlot";
 import Widget from "../../src/components/Widget";
-import { useEffect, useState } from "react";
+import { useEffect, useState, FormEvent } from "react";
 import { Item } from "../../src/models/Item";
 import { getBestValue } from "../../src/services/CraftService";
 import { generateItems } from "../../src/utils/generateItems";
 import { useRouter } from "next/router";
+import arrow from "../../assets/images/arrow.png";
+import { API } from '../../assets/consts';
 
-const defaultItem: Item = {
-  id: "",
-  imagem: "",
-  peso: 0,
-  quantidade: 0,
-  valor: 0,
-};
-//to-do peso meximo
-const Game: NextPage = () => {
+type Level = {
+  numero: number;
+  peso: number;
+  bestResult: Item;
+  inventoryList: Item[];
+  craftingList: Item[];
+}
+
+export default function Game() {
   const router = useRouter();
-  const [score, setScore] = useState<number>(0);
-  const [slotList, setSlotList] = useState<Array<Item>>([]);
-  const [level, setLevel] = useState({ numero: 1, peso: 7 });
-  const [items, setItems] = useState<Item[]>(generateItems(level.numero));
-  const [levelScore, setLevelScore] = useState<any>({ pontuacao: 0, peso: 0 });
-  const [bestResult, setBestResult] = useState<Item>({
-    id: "emerald",
-    imagem: "https://minecraftitemids.com/item/64/emerald.png",
-    peso: level.peso,
-    quantidade: 0,
-    valor: 0,
-  });
-
-  useEffect(() => {
-    const bestValue = getBestValue(items, level.peso);
-    setItems(generateItems(level.numero));
-
-    for (let index = 0; index < 9; index++)
-      slotList[index] = defaultItem;
-
-
-    slotList[4] = {
-      id: "EnchantedBook",
-      imagem: "https://minecraftitemids.com/item/32/enchanted_book.png",
+  const [level, setLevel] = useState<Level>({
+    numero: 0, peso: 0, inventoryList: [], craftingList: [],
+    bestResult: {
+      id: 'result',
+      imagem: "https://minecraftitemids.com/item/64/emerald.png",
       peso: 0,
       quantidade: 0,
       valor: 0,
-    };
-
-    for (let index = 0; index < items.length; index++) {
-      slotList[index + 9] = {
-        id: items[index].id,
-        imagem: items[index].imagem,
-        peso: items[index].peso,
-        quantidade: items[index].quantidade,
-        valor: items[index].valor,
+    }
+  });
+  const [score, setScore] = useState<number>(0);
+  const [footerList, setFooterList] = useState<Item[]>([]);
+  const [levelScore, setLevelScore] = useState<any>({ pontuacao: 0, peso: 0 });
+  // const [bestResult, setBestResult] = useState<Item>({
+  //   id: "result",
+  //   imagem: "https://minecraftitemids.com/item/64/emerald.png",
+  //   peso: level.peso,
+  //   quantidade: 0,
+  //   valor: 0,
+  // });
+  // console.log("=============================");
+  // console.log(bestResult);
+  // console.log(inventoryList);
+  useEffect(() => {
+    nextLevel(1, 20);
+    for (let index = 0; index < 9; index++) {
+      footerList[index] = {
+        id: "emerald".concat(index.toString()),
+        imagem: "https://minecraftitemids.com/item/64/emerald.png",
+        peso: 0,
+        quantidade: 0,
+        valor: 0,
       };
     }
+  }, []);
 
-    setBestResult((values: any) => (
-      {
-        ...values,
-        peso: level.peso,
+  useEffect(() => {
+    if (!score) return;
+    const username = router.query.username?.toString() ?? "Anonimo";
+    const data = {
+      method: 'POST',
+      body: JSON.stringify({ username, score })
+    }
+    fetch(API + '/ranking', data)
+      .then(r => r.json())
+      .then(j => console.log(j))
+  }, [score]);
+
+  function nextLevel(numero: number, peso: number) {
+    const inventoryList = generateItems(numero);
+    const bestValue = getBestValue(inventoryList, peso);
+    const newLevel: Level = {
+      numero,
+      peso,
+      inventoryList,
+      craftingList: [],
+      bestResult: {
+        ...level.bestResult,
+        peso: peso,
         quantidade: bestValue,
-        valor: bestValue,
-      }
-    ));
-
-  }, [level]);
-
-  function clickItem(slotId: String, itemIndex: number) {
-    if (slotList[itemIndex] === undefined || slotList[itemIndex].id == "" || itemIndex == 4)
-      return;
-
-    if (slotId.includes("crafting")) {
-      for (let index = 9; index < 36; index++) {
-        if (slotList[index] === undefined || slotList[index].id === "") {
-          setLevelScore({ pontuacao: levelScore.pontuacao - slotList[itemIndex].valor, peso: levelScore.peso - slotList[itemIndex].peso });
-          slotList[index] = slotList[itemIndex];
-          slotList[itemIndex] = defaultItem;
-          break;
-        }
-      }
-    } else {
-      for (let index = 0; index < 9; index++) {
-        if (slotList[index] === undefined || slotList[index].id == "") {
-          setLevelScore({ pontuacao: levelScore.pontuacao + slotList[itemIndex].valor, peso: levelScore.peso + slotList[itemIndex].peso });
-          slotList[index] = slotList[itemIndex];
-          slotList[itemIndex] = defaultItem;
-          break;
-        }
+        valor: bestValue
       }
     }
-
-    setSlotList([...slotList]);
+    setLevel(newLevel);
+    console.log("nextLevel", bestValue, inventoryList, newLevel);
   }
 
-  function clickResult() {
-    if (levelScore.peso <= level.peso && levelScore.pontuacao == bestResult.valor) {
-      setScore(score + levelScore.pontuacao);
-      setLevelScore({ pontuacao: 0, peso: 0 });
-      setLevel({ numero: level.numero + 1, peso: level.peso + 2 });
-    }
-    else {
+  function clickCraftItem(index: number) {
+    const item = level.craftingList[index];
+    if (!item) return;
+
+    setLevel(l => {
+      return {
+        ...l,
+        inventoryList: [...l.inventoryList, item],
+        craftingList: l.craftingList.filter(i => i != item)
+      }
+    });
+    setLevelScore({ pontuacao: levelScore.pontuacao - item.valor, peso: levelScore.peso - item.peso });
+  }
+
+  function clickInventoryItem(index: number) {
+    const item = level.inventoryList[index];
+    if (!item && level.craftingList.length < 9)
+      return;
+
+    setLevel(l => {
+      return {
+        ...l,
+        inventoryList: l.inventoryList.filter(i => i != item),
+        craftingList: [...l.craftingList, item],
+      }
+    });
+    setLevelScore({ pontuacao: levelScore.pontuacao + item.valor, peso: levelScore.peso + item.peso });
+  }
+
+  function clickResult(e: FormEvent) {
+    const isGameOver = levelScore.peso > level.peso || levelScore.pontuacao != level.bestResult.valor;
+
+    if (isGameOver) {
+      e.preventDefault();
       router.push({
-        pathname: '/gameOver', query: {
-          username: router.query.username, score: score
-        }
+        pathname: '/gameOver', query: { username: router.query.username, score }
       });
+      return;
     }
+
+    for (let index = 0; index < footerList.length; index++) {
+      if (footerList[index].quantidade === 64)
+        continue;
+
+      if ((footerList[index].quantidade + levelScore.pontuacao) < 65 || index === 8) {
+        footerList[index].quantidade += levelScore.pontuacao;
+        break;
+      }
+      else {
+        footerList[index + 1].quantidade = footerList[index].quantidade + levelScore.pontuacao - 64;
+        footerList[index].quantidade = 64;
+        break;
+      }
+    }
+
+    setFooterList(footerList);
+    setScore(score + levelScore.pontuacao);
+    setLevelScore({ pontuacao: 0, peso: 0 });
+
+    nextLevel(level.numero + 1, level.peso + 2);
   }
 
   return (
@@ -116,22 +154,21 @@ const Game: NextPage = () => {
         <h1>Crafting</h1>
         <div className="slotSpace">
           <div className="d-flex align-items-center justify-content-around w-100">
-            <div className="item">
-              <img src="https://minecraftitemids.com/item/32/knowledge_book.png" />
-            </div>
             <div className="rowSize">
               {Array(9)
                 .fill(1)
                 .map((value, index: number) => (
                   <ItemSlot
-                    id={"crafting" + index}
-                    onClick={() => clickItem("crafting" + index, index)}
-                    item={slotList[index]}
+                    key={"crafting" + index}
+                    onClick={() => clickCraftItem(index)}
+                    item={level.craftingList[index]}
+                    showTooltip={true}
                   />
                 ))}
             </div>
+            <img src={arrow.src} />
             <div className="slot">
-              <ItemSlot id="result" item={bestResult} onClick={() => clickResult()} />
+              <ItemSlot key={level.numero} item={level.bestResult} onClick={(e) => clickResult(e)} showTooltip={true} />
             </div>
           </div>
         </div>
@@ -141,9 +178,10 @@ const Game: NextPage = () => {
             .fill(1)
             .map((value, index: number) => (
               <ItemSlot
-                id={"inventory" + index}
-                item={slotList[index + 9]}
-                onClick={() => clickItem("inventory" + index, index + 9)}
+                key={"inventory" + index}
+                item={level.inventoryList[index]}
+                onClick={() => clickInventoryItem(index)}
+                showTooltip={true}
               />
             ))}
         </div>
@@ -152,9 +190,9 @@ const Game: NextPage = () => {
             .fill(1)
             .map((value, index: number) => (
               <ItemSlot
-                id={"main" + index}
-                item={slotList[index + 36]}
-                onClick={() => clickItem("main" + index, index + 36)}
+                key={'footer' + index}
+                item={footerList[index]}
+                showTooltip={false}
               />
             ))}
         </div>
@@ -162,5 +200,3 @@ const Game: NextPage = () => {
     </Widget>
   );
 };
-
-export default Game;

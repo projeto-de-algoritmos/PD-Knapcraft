@@ -1,45 +1,41 @@
-**!! Atenção: Renomeie o seu repositório para (Tema)_(NomeDoProjeto). !!** 
+# Knapcraft
 
-Temas:
- - Grafos1
- - Grafos2
- - PD
- - D&C
- - Greed
- - Final 
- 
- **!! *Não coloque os nomes dos alunos no título do repositório*. Exemplo de título correto: Grafos2_Labirinto-do-Minotauro !!**
- 
- (Apague essa seção)
-
-# NomedoProjeto
-
-**Número da Lista**: X<br>
-**Conteúdo da Disciplina**: XXXXXXXXXX<br>
+**Número da Lista**: 20<br>
+**Conteúdo da Disciplina**: PD<br>
 
 ## Alunos
-|Matrícula | Aluno |
-| -- | -- |
-| xx/xxxxxx  |  xxxx xxxx xxxxx |
-| xx/xxxxxx  |  xxxx xxxx xxxxx |
 
-## Sobre 
-Descreva os objetivos do seu projeto e como ele funciona. 
+| Matrícula  | Aluno                   |
+| ---------- | ----------------------- |
+| 19/0025379 | Brenno Oliveira Silva   |
+| 19/0020377 | Thiago Sampaio de Paiva |
+
+## Sobre
+
+O Knapcraft consiste na utilização do algoritmo de knapsack em programação dinâmica para gerar o melhor valor dado um conjunto de .
+
+## Apresentação
+
+[Video da Apresentação](assets/videos/apresentacao.mp4)
+
+<hr>
 
 ## Screenshots
-Adicione 3 ou mais screenshots do projeto em funcionamento.
 
-## Instalação 
-**Linguagem**: xxxxxx<br>
-**Framework**: (caso exista)<br>
-Descreva os pré-requisitos para rodar o seu projeto e os comandos necessários.
+<img src="assets/images/telaInicial.png" width="600"/>
 
-## Uso 
-Explique como usar seu projeto caso haja algum passo a passo após o comando de execução.
+<img src="assets/images/telaJogo.png" width="600"/>
 
-## Outros 
-Quaisquer outras informações sobre seu projeto podem ser descritas abaixo.
+<img src="assets/images/telaPersonagem.png" width="600"/>
+<hr>
 
+## Instalação
 
+**Linguagem**: Typescript<br>
+**Framework**: NextJS<br>
 
+## Uso
 
+Para utilizar o projeto acesse: https://pd-knapcraft.vercel.app/ ou rode os comandos:
+npm install<br>
+npm run dev

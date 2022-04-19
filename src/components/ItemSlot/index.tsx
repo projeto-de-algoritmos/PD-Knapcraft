@@ -1,30 +1,34 @@
-export default function ItemSlot(props: any) {
+import { Item } from "../../models/Item";
+import { MouseEventHandler } from "react";
+
+export default function ItemSlot({ item, onClick, showTooltip }: ItemSlotProps) {
+  if (!item || item.quantidade === 0) {
+    return <div className="slot"></div>;
+  }
+
   return (
     <>
-      <div id={props.id} className="slot" onClick={props.onClick}>
+      <div className="slot" onClick={onClick}>
         <div className="item">
-          <img
-            src={
-              typeof props.item !== "undefined"
-                ? props.item.imagem
-                : ""
-            }
-          />
+          <img src={item.imagem} />
           <div className="number">
-            {typeof props.item !== "undefined" && props.item.quantidade > 0
-              ? props.item.quantidade
-              : ""}
+            {item.quantidade}
           </div>
         </div>
       </div>
-      {typeof props.item !== "undefined" && props.item.quantidade > 0
-        ?
+      {showTooltip && item.quantidade > 0 &&
         <div className="item-info">
-          <div>{`Item: ${props.item.id}`}</div>
-          <div>{`Peso: ${props.item.peso}`}</div>
-          <div>{`Valor: ${props.item.valor}`}</div>
-        </div> : <></>
+          <div>{`Item: ${item.id}`}</div>
+          <div>{`Peso: ${item.peso}`}</div>
+          <div>{`Valor: ${item.valor}`}</div>
+        </div>
       }
     </>
   );
+}
+
+type ItemSlotProps = {
+  item?: Item;
+  onClick?: MouseEventHandler<HTMLDivElement>,
+  showTooltip: boolean;
 }

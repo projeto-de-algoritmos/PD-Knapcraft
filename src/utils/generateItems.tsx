@@ -36,7 +36,7 @@ export function generateItems(level: number): Item[] {
   let selectedMaterial: Material = { nome: "", valor: 0 };
   let selectedForma: Forma = { nome: "", peso: 0, valor: 0 };
 
-  for (let index = 0; index < level + 2 && index < 36; index++) {
+  for (let index = 0; index < level + 2 && index < 27; index++) {
     selectedMaterial = material[randint(0, material.length - 1)];
     selectedForma = forma[randint(0, forma.length - 1)];
 
@@ -48,6 +48,5 @@ export function generateItems(level: number): Item[] {
       valor: selectedForma.valor * selectedMaterial.valor,
     });
   }
-
   return items;
 }

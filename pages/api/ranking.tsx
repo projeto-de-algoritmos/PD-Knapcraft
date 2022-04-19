@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { RankingLine } from '../../src/models/Ranking'
-import { selectAllRanking, createRankingLine, updateRankingLine, cleanUsername, containsUsername } from '../../src/services/RankingService'
+import { selectAllRanking, createRankingLine, updateRankingLine, cleanUsername, containsUsername as getByUsername } from '../../src/services/RankingService'
 
 
 export default async function handler(
@@ -31,13 +31,19 @@ async function create(
   req: NextApiRequest,
   res: NextApiResponse<RankingLine | ErrorResponse>
 ) {
-  const { username, score } = req.body;
+  const { username, score } = JSON.parse(req.body);
+
+  if (!username || !score) {
+    res.status(400).send({ error: "Username or score invalid" })
+    return;
+  }
 
   try {
-    let rankingLine = null;
-
-    if (await containsUsername(username)) {
-      rankingLine = await updateRankingLine({ username, score });
+    let rankingLine = await getByUsername(username);
+    if (rankingLine) {
+      if (score > rankingLine.score) {
+        rankingLine = await updateRankingLine({ username, score });
+      }
     } else {
       rankingLine = await createRankingLine({ username, score });
     }
