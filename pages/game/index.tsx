@@ -48,7 +48,7 @@ export default function Game({ theme }: GameProps) {
       method: 'POST',
       body: JSON.stringify({ username, score })
     }
-    fetch(API + '/ranking', data)
+    fetch('https://pd-knapcraft.vercel.app/api/ranking', data)
       .then(r => r.json())
       .then(j => console.log(j))
   }, [score]);
